@@ -1,2 +1,2 @@
 # CLI Goodies
-Miscellaneous for making your cli IO extra fancy!
+iscellaneous utilities for making your cli IO extra fancy!
