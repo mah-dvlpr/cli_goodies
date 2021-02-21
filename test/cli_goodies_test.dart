@@ -6,10 +6,7 @@ import 'package:test/test.dart';
 void main() {
   test('animate', () async {
     await animationStart();
-    // Start Your demanding computation.
-    sleep(Duration(seconds: 10));
-    // Computation is over.
+    sleep(Duration(seconds: 10)); // Emulated demanding computation.
     animationStop();
-    sleep(Duration(seconds: 5));
   });
 }
