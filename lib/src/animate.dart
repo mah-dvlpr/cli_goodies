@@ -11,7 +11,8 @@ Future<Isolate> animationStart() async {
   return _animationIsolate ?? (_animationIsolate = await Isolate.spawn(_animate, null));
 }
 
-/// Stops current animation by killing the isolate instance.
+/// Stops current animation by killing the isolate instance,
+/// and clears current line.
 void animationStop() {
   _animationIsolate.kill(priority: Isolate.immediate);
   _animationIsolate = null;
