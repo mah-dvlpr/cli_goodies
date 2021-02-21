@@ -5,8 +5,9 @@ import 'package:test/test.dart';
 
 void main() {
   test('animate', () async {
-    await animationStart();
-    sleep(Duration(seconds: 10)); // Emulated demanding computation.
-    animationStop();
+    print('Starting computation 1...');
+    await startSpinner(SpinnerType.dice);
+    sleep(Duration(seconds: 2)); // Emulating demanding computation.
+    stopSpinner();
   });
 }
