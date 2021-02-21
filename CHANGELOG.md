@@ -1,3 +1,8 @@
+# 0.1.4
+- Added a factory for multiple spinners.
+- Structural improvements.
+- Better documentation.
+
 # 0.1.3
 More project fixes... *sigh*
 
