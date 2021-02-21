@@ -1,5 +1,5 @@
 name: cli_goodies
-description: A simple command-line application.
+description: Miscellaneous utilities for making your cli IO extra fancy!
 version: 0.1.0
 homepage: https://github.com/mah-dvlpr/cli_goodies
 
