@@ -1,1 +1,1 @@
-export 'src/animate.dart';
+export 'src/spinners.dart';

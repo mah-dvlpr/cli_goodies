@@ -1,27 +1,54 @@
 import 'dart:io';
+import 'dart:async';
+import 'dart:isolate';
 
 enum SpinnerType { snake, dice, clock }
+
+/// Active isolate object. Is created when [startSpinner()] is called.
+Isolate _spinnerIsolate;
+
+/// Starts an animation on a new line.
+Future<Isolate> startSpinner(SpinnerType type) async {
+  stdout.write('\x1B[?25l'); // Hide the cursor.
+  return _spinnerIsolate ?? (_spinnerIsolate = await Isolate.spawn(_animate, type));
+}
+
+/// Stops current spinner animation by killing the isolate instance,
+/// and clears current line.
+void stopSpinner() {
+  _spinnerIsolate.kill(priority: Isolate.immediate);
+  _spinnerIsolate = null;
+  stdout.write('\x1B[2K\x1B[1G'); // Clear current line, and move to first col.
+  stdout.write('\x1B[?25h'); // Unhide the cursor.
+}
+
+/// Run the animation of active [_spinnerIsolate].
+/// 
+/// The [sp] is ignored, and can be set to null.
+Future<void> _animate(SpinnerType type) async {
+  _Spinner(type).animate();
+}
 
 /// Base (abstract) class of all cli spinners.
 ///
 /// The [frames] field holds each individual frame of an animation, whilst the
 /// [frame_period] represents the sleep time between each frame.
-abstract class Spinner {
+abstract class _Spinner {
   final frames;
   final frame_period;
 
-  Spinner._(this.frames, this.frame_period);
+  _Spinner._(this.frames, this.frame_period);
 
-  factory Spinner(SpinnerType type) {
+  factory _Spinner(SpinnerType type) {
     switch (type) {
       case SpinnerType.snake:
-        return Snake();
+        return _Snake();
       case SpinnerType.dice:
-        return Dice();
+        return _Dice();
       case SpinnerType.clock:
-        return Clock();
+        return _Clock();
       default:
-        return Snake();
+        return _Snake();
     }
   }
 
@@ -37,11 +64,11 @@ abstract class Spinner {
   }
 }
 
-class Snake extends Spinner {
+class _Snake extends _Spinner {
   static const _frames = ['⠁', '⠂', '⠄', '⡀', '⢀', '⠠', '⠐', '⠈'];
   static const _frame_period = 100;
 
-  Snake() : super._(_frames, _frame_period);
+  _Snake() : super._(_frames, _frame_period);
 
   void _nextFrame(int frame) {
     stdout.write('\x1B[1m${frames[frame]}\x1B[m');
@@ -69,18 +96,19 @@ class Snake extends Spinner {
   }
 }
 
-class Dice extends Spinner {
+class _Dice extends _Spinner {
   static const _frames = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
   static const _frame_period = 500;
 
-  Dice() : super._(_frames, _frame_period);
+  _Dice() : super._(_frames, _frame_period);
 }
 
-class Clock extends Spinner {
+class _Clock extends _Spinner {
   static const _frames = [
     '🕐',
     '🕑',
     '🕒',
+    '🕓',
     '🕔',
     '🕕',
     '🕖',
@@ -92,5 +120,5 @@ class Clock extends Spinner {
   ];
   static const _frame_period = 500;
 
-  Clock() : super._(_frames, _frame_period);
+  _Clock() : super._(_frames, _frame_period);
 }
